@@ -11,7 +11,7 @@ using Perritos;
 namespace PERRITOS.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240227213819_Initial")]
+    [Migration("20240229025851_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -31,7 +31,7 @@ namespace PERRITOS.Migrations
                     b.Property<DateTime>("FechaAdopcion")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<string>("Foto")
+                    b.Property<string>("Imagen")
                         .IsRequired()
                         .HasColumnType("longtext");
 
@@ -104,7 +104,7 @@ namespace PERRITOS.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<int>("DiscapacidadId")
+                    b.Property<int?>("DiscapacidadId")
                         .HasColumnType("int");
 
                     b.Property<string>("Edad")
@@ -116,6 +116,10 @@ namespace PERRITOS.Migrations
 
                     b.Property<int>("GeneroId")
                         .HasColumnType("int");
+
+                    b.Property<string>("Imagen")
+                        .IsRequired()
+                        .HasColumnType("longtext");
 
                     b.Property<string>("Nombre")
                         .IsRequired()
@@ -202,9 +206,7 @@ namespace PERRITOS.Migrations
                 {
                     b.HasOne("Perritos.Entities.Discapacidad", "Discapacidad")
                         .WithMany()
-                        .HasForeignKey("DiscapacidadId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("DiscapacidadId");
 
                     b.HasOne("Perritos.Entities.Genero", "Genero")
                         .WithMany()

@@ -72,7 +72,9 @@ namespace PERRITOS.Migrations
                     Esterilizado = table.Column<bool>(type: "tinyint(1)", nullable: false),
                     Edad = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    DiscapacidadId = table.Column<int>(type: "int", nullable: false)
+                    Imagen = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    DiscapacidadId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -81,8 +83,7 @@ namespace PERRITOS.Migrations
                         name: "FK_Perritos_Discapacidades_DiscapacidadId",
                         column: x => x.DiscapacidadId,
                         principalTable: "Discapacidades",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Perritos_Generos_GeneroId",
                         column: x => x.GeneroId,
@@ -150,7 +151,7 @@ namespace PERRITOS.Migrations
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     PerritoId = table.Column<int>(type: "int", nullable: false),
                     FechaAdopcion = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    Foto = table.Column<string>(type: "longtext", nullable: false)
+                    Imagen = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4")
                 },
                 constraints: table =>

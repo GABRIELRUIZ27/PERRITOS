@@ -5,6 +5,6 @@
         public int Id { get; set; }
         public Perrito Perrito { get; set; }
         public DateTime FechaAdopcion { get; set; }
-        public string Foto { get; set; }
+        public string Imagen { get; set; } 
     }
 }
