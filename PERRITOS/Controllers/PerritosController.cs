@@ -42,29 +42,46 @@ namespace simpatizantes_api.Controllers
                 return NotFound();
             }
 
-            return Ok(mapper.Map<PerritoDTO>(perrito));
+            var perritoDTO = mapper.Map<PerritoDTO>(perrito);
+
+            if (!string.IsNullOrEmpty(perrito.Imagen))
+            {
+                perritoDTO.ImagenBase64 = ObtenerBase64DesdeRutaImagen(perrito.Imagen);
+            }
+
+            return Ok(perritoDTO);
         }
 
         [HttpGet("obtener-todos")]
-        public async Task<ActionResult> GetAll()
+        public async Task<ActionResult<List<PerritoDTO>>> GetAll()
         {
             try
             {
-                var perrito = await context.Perritos
+                var perritos = await context.Perritos
                     .Include(t => t.Genero)
                     .Include(g => g.Discapacidad)
                     .ToListAsync();
 
-                if (!perrito.Any())
+                if (perritos == null || perritos.Count == 0)
                 {
                     return NotFound();
                 }
 
-                return Ok(mapper.Map<List<PerritoDTO>>(perrito));
+                var perritosDTO = mapper.Map<List<PerritoDTO>>(perritos);
+
+                foreach (var perritoDTO in perritosDTO)
+                {
+                    if (!string.IsNullOrEmpty(perritoDTO.Imagen))
+                    {
+                        perritoDTO.ImagenBase64 = ObtenerBase64DesdeRutaImagen(perritoDTO.Imagen);
+                    }
+                }
+
+                return Ok(perritosDTO);
             }
             catch (Exception ex)
             {
-                return StatusCode(500, new { error = "Error interno del candidatos ", details = ex.Message });
+                return StatusCode(500, new { error = "Error interno al obtener todos los perritos.", details = ex.Message });
             }
         }
 
@@ -169,6 +186,56 @@ namespace simpatizantes_api.Controllers
         private bool PerritosExists(int id)
         {
             return context.Perritos.Any(e => e.Id == id);
+        }
+        private static string ObtenerBase64DesdeRutaImagen(string urlImagen)
+        {
+            try
+            {
+                // Obtén la ruta completa del archivo a partir de la URL de la imagen
+                string rutaArchivo = ObtenerRutaArchivoDesdeUrl(urlImagen);
+
+                // Verifica si la ruta del archivo es válida
+                if (rutaArchivo != null && System.IO.File.Exists(rutaArchivo))
+                {
+                    // Lee el contenido del archivo como un array de bytes
+                    byte[] imageArray = System.IO.File.ReadAllBytes(rutaArchivo);
+
+                    // Convierte el array de bytes en una representación en base64
+                    string base64ImageRepresentation = Convert.ToBase64String(imageArray);
+
+                    return base64ImageRepresentation;
+                }
+                else
+                {
+                    Console.WriteLine("La ruta de la imagen no es válida o el archivo no existe.");
+                    return null;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error al obtener el base64 de la imagen: " + ex.Message);
+                return null;
+            }
+        }
+
+        private static string ObtenerRutaArchivoDesdeUrl(string urlImagen)
+        {
+            // Encuentra la posición de "perritos/" en la URL
+            int indicePerritos = urlImagen.IndexOf("perritos/");
+
+            if (indicePerritos >= 0)
+            {
+                // Obtiene la parte de la URL que sigue después de "perritos/"
+                string rutaRelativa = urlImagen.Substring(indicePerritos + "perritos/".Length);
+
+                // Construye la ruta completa en el sistema de archivos
+                string rutaCompleta = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "perritos", rutaRelativa);
+
+                return rutaCompleta;
+            }
+
+            // Si no se encuentra "perritos/" en la URL, devuelve null o maneja el error de acuerdo a tus necesidades
+            return null;
         }
 
     }
