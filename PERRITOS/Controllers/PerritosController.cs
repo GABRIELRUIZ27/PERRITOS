@@ -88,7 +88,6 @@ namespace simpatizantes_api.Controllers
         [HttpPost("crear")]
         public async Task<ActionResult> Post(PerritoDTO dto)
         {
-
             if (!string.IsNullOrEmpty(dto.ImagenBase64))
             {
                 dto.Imagen = await almacenadorImagenes.GuardarImagen(dto.ImagenBase64, directorioPerritos);

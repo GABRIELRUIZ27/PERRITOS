@@ -202,11 +202,11 @@ namespace PERRITOS.Migrations
             modelBuilder.Entity("Perritos.Entities.Perrito", b =>
                 {
                     b.HasOne("Perritos.Entities.Discapacidad", "Discapacidad")
-                        .WithMany()
+                        .WithMany("Perritos")
                         .HasForeignKey("DiscapacidadId");
 
                     b.HasOne("Perritos.Entities.Genero", "Genero")
-                        .WithMany()
+                        .WithMany("Perritos")
                         .HasForeignKey("GeneroId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -225,6 +225,16 @@ namespace PERRITOS.Migrations
                         .IsRequired();
 
                     b.Navigation("Rol");
+                });
+
+            modelBuilder.Entity("Perritos.Entities.Discapacidad", b =>
+                {
+                    b.Navigation("Perritos");
+                });
+
+            modelBuilder.Entity("Perritos.Entities.Genero", b =>
+                {
+                    b.Navigation("Perritos");
                 });
 
             modelBuilder.Entity("Perritos.Entities.Rol", b =>

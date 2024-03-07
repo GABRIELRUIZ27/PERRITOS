@@ -10,7 +10,7 @@ INSERT INTO perritos.claims (ClaimType, ClaimValue, RolId) VALUES
 ('CanAccessInicio', 1, 1),
 ('CanAccessPerritos', 1, 1),
 ('CanAccessDiscapacidades', 1, 1),
-('CanAccessAdpciones', 1, 1),
+('CanAccessAdopciones', 1, 1),
 ('CanAccessUsuarios', 1, 1);
 
 INSERT INTO perritos.generos(nombre) VALUES 

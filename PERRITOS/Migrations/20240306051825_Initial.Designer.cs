@@ -11,7 +11,7 @@ using Perritos;
 namespace PERRITOS.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240229025851_Initial")]
+    [Migration("20240306051825_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -205,11 +205,11 @@ namespace PERRITOS.Migrations
             modelBuilder.Entity("Perritos.Entities.Perrito", b =>
                 {
                     b.HasOne("Perritos.Entities.Discapacidad", "Discapacidad")
-                        .WithMany()
+                        .WithMany("Perritos")
                         .HasForeignKey("DiscapacidadId");
 
                     b.HasOne("Perritos.Entities.Genero", "Genero")
-                        .WithMany()
+                        .WithMany("Perritos")
                         .HasForeignKey("GeneroId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -228,6 +228,16 @@ namespace PERRITOS.Migrations
                         .IsRequired();
 
                     b.Navigation("Rol");
+                });
+
+            modelBuilder.Entity("Perritos.Entities.Discapacidad", b =>
+                {
+                    b.Navigation("Perritos");
+                });
+
+            modelBuilder.Entity("Perritos.Entities.Genero", b =>
+                {
+                    b.Navigation("Perritos");
                 });
 
             modelBuilder.Entity("Perritos.Entities.Rol", b =>
