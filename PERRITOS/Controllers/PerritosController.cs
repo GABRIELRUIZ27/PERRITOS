@@ -35,6 +35,8 @@ namespace simpatizantes_api.Controllers
             var perrito = await context.Perritos
                 .Include(c => c.Genero)
                 .Include(g => g.Discapacidad)
+                .Include(g => g.Edad)
+                .Include(g => g.Tamaño)
                 .FirstOrDefaultAsync(b => b.Id == id);
 
             if (perrito == null)
@@ -60,6 +62,8 @@ namespace simpatizantes_api.Controllers
                 var perritos = await context.Perritos
                     .Include(t => t.Genero)
                     .Include(g => g.Discapacidad)
+                    .Include(g => g.Edad)
+                    .Include(g => g.Tamaño)
                     .ToListAsync();
 
                 if (perritos == null || perritos.Count == 0)
@@ -95,6 +99,8 @@ namespace simpatizantes_api.Controllers
 
             var perro = mapper.Map<Perrito>(dto);
             perro.Genero = await context.Generos.SingleOrDefaultAsync(s => s.Id == dto.Genero.Id);
+            perro.Edad = await context.Edades.SingleOrDefaultAsync(s => s.Id == dto.Edad.Id);
+            perro.Tamaño = await context.Tamaños.SingleOrDefaultAsync(s => s.Id == dto.Tamaño.Id);
 
             if (dto.Discapacidad != null)
             {
@@ -155,6 +161,8 @@ namespace simpatizantes_api.Controllers
 
             mapper.Map(dto, perrito);
             perrito.Genero = await context.Generos.SingleOrDefaultAsync(g => g.Id == dto.Genero.Id);
+            perrito.Edad = await context.Edades.SingleOrDefaultAsync(s => s.Id == dto.Edad.Id);
+            perrito.Tamaño = await context.Tamaños.SingleOrDefaultAsync(s => s.Id == dto.Tamaño.Id);
 
             if (dto.Discapacidad != null)
             {

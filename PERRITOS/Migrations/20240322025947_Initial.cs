@@ -31,6 +31,21 @@ namespace PERRITOS.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
+                name: "Edades",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    Nombre = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Edades", x => x.Id);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
                 name: "Generos",
                 columns: table => new
                 {
@@ -61,35 +76,17 @@ namespace PERRITOS.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "Perritos",
+                name: "Tamaños",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     Nombre = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    GeneroId = table.Column<int>(type: "int", nullable: false),
-                    Esterilizado = table.Column<bool>(type: "tinyint(1)", nullable: false),
-                    Edad = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    Imagen = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    DiscapacidadId = table.Column<int>(type: "int", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4")
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Perritos", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Perritos_Discapacidades_DiscapacidadId",
-                        column: x => x.DiscapacidadId,
-                        principalTable: "Discapacidades",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Perritos_Generos_GeneroId",
-                        column: x => x.GeneroId,
-                        principalTable: "Generos",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                    table.PrimaryKey("PK_Tamaños", x => x.Id);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -144,6 +141,51 @@ namespace PERRITOS.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
+                name: "Perritos",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    Nombre = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    GeneroId = table.Column<int>(type: "int", nullable: false),
+                    Esterilizado = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    Imagen = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    DiscapacidadId = table.Column<int>(type: "int", nullable: true),
+                    TamañoId = table.Column<int>(type: "int", nullable: false),
+                    EdadId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Perritos", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Perritos_Discapacidades_DiscapacidadId",
+                        column: x => x.DiscapacidadId,
+                        principalTable: "Discapacidades",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Perritos_Edades_EdadId",
+                        column: x => x.EdadId,
+                        principalTable: "Edades",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Perritos_Generos_GeneroId",
+                        column: x => x.GeneroId,
+                        principalTable: "Generos",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Perritos_Tamaños_TamañoId",
+                        column: x => x.TamañoId,
+                        principalTable: "Tamaños",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
                 name: "Adoptados",
                 columns: table => new
                 {
@@ -182,9 +224,19 @@ namespace PERRITOS.Migrations
                 column: "DiscapacidadId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Perritos_EdadId",
+                table: "Perritos",
+                column: "EdadId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Perritos_GeneroId",
                 table: "Perritos",
                 column: "GeneroId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Perritos_TamañoId",
+                table: "Perritos",
+                column: "TamañoId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Usuarios_RolId",
@@ -214,7 +266,13 @@ namespace PERRITOS.Migrations
                 name: "Discapacidades");
 
             migrationBuilder.DropTable(
+                name: "Edades");
+
+            migrationBuilder.DropTable(
                 name: "Generos");
+
+            migrationBuilder.DropTable(
+                name: "Tamaños");
         }
     }
 }

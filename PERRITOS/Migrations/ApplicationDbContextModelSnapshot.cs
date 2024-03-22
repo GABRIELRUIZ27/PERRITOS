@@ -19,6 +19,36 @@ namespace PERRITOS.Migrations
                 .HasAnnotation("ProductVersion", "7.0.2")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
+            modelBuilder.Entity("PERRITOS.Entities.Edad", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("Nombre")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Edades");
+                });
+
+            modelBuilder.Entity("PERRITOS.Entities.Tamaño", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("Nombre")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Tamaños");
+                });
+
             modelBuilder.Entity("Perritos.Entities.Adoptado", b =>
                 {
                     b.Property<int>("Id")
@@ -104,9 +134,8 @@ namespace PERRITOS.Migrations
                     b.Property<int?>("DiscapacidadId")
                         .HasColumnType("int");
 
-                    b.Property<string>("Edad")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                    b.Property<int>("EdadId")
+                        .HasColumnType("int");
 
                     b.Property<bool>("Esterilizado")
                         .HasColumnType("tinyint(1)");
@@ -122,11 +151,18 @@ namespace PERRITOS.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
+                    b.Property<int>("TamañoId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("DiscapacidadId");
 
+                    b.HasIndex("EdadId");
+
                     b.HasIndex("GeneroId");
+
+                    b.HasIndex("TamañoId");
 
                     b.ToTable("Perritos");
                 });
@@ -205,15 +241,31 @@ namespace PERRITOS.Migrations
                         .WithMany("Perritos")
                         .HasForeignKey("DiscapacidadId");
 
+                    b.HasOne("PERRITOS.Entities.Edad", "Edad")
+                        .WithMany("Perritos")
+                        .HasForeignKey("EdadId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Perritos.Entities.Genero", "Genero")
                         .WithMany("Perritos")
                         .HasForeignKey("GeneroId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("PERRITOS.Entities.Tamaño", "Tamaño")
+                        .WithMany("Perritos")
+                        .HasForeignKey("TamañoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Discapacidad");
 
+                    b.Navigation("Edad");
+
                     b.Navigation("Genero");
+
+                    b.Navigation("Tamaño");
                 });
 
             modelBuilder.Entity("Perritos.Entities.Usuario", b =>
@@ -225,6 +277,16 @@ namespace PERRITOS.Migrations
                         .IsRequired();
 
                     b.Navigation("Rol");
+                });
+
+            modelBuilder.Entity("PERRITOS.Entities.Edad", b =>
+                {
+                    b.Navigation("Perritos");
+                });
+
+            modelBuilder.Entity("PERRITOS.Entities.Tamaño", b =>
+                {
+                    b.Navigation("Perritos");
                 });
 
             modelBuilder.Entity("Perritos.Entities.Discapacidad", b =>
