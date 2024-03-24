@@ -103,5 +103,47 @@ namespace simpatizantes_api.Controllers
 
             return Ok(estadisticas);
         }
+
+        [HttpGet("total-perritos-por-discapacidad")]
+        public async Task<ActionResult<List<PerritoDiscapacidadDTO>>> TotalPerritosPorDiscapacidad()
+        {
+            var Simpatizantes = await context.Perritos.ToListAsync();
+            var totalSimpatizantes = Simpatizantes.Count;
+
+            if (totalSimpatizantes == 0)
+            {
+                return Ok(new List<PerritoDiscapacidadDTO>());
+            }
+
+            var programasSociales = await context.Discapacidades
+                .Include(p => p.Perritos).ToListAsync();
+
+            var estadisticas = programasSociales
+                .Select(programa => new PerritoDiscapacidadDTO
+                {
+                    Id = programa.Id,
+                    Nombre = programa.Nombre,
+                    TotalPerritos = programa.Perritos?.Count ?? 0,
+                    Porcentaje = programa.Perritos?.Count * 100 / totalSimpatizantes ?? 0
+                })
+                .ToList();
+
+            return Ok(estadisticas);
+        }
+
+        [HttpGet("total-adopciones")]
+        public async Task<ActionResult<int>> TotalAdopciones()
+        {
+            try
+            {
+                var totalAdopciones = await context.Adoptados.CountAsync();
+                return Ok(totalAdopciones);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { error = "Error interno del servidor al obtener el total de adopciones.", details = ex.Message });
+            }
+        }
+
     }
 }
